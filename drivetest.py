@@ -2,8 +2,8 @@ import Jetson.GPIO as GPIO
 import time
 
 # GPIO pin setup
-STEER_PIN = 12
-DRIVE_PIN = 16
+STEER_PIN = 33
+DRIVE_PIN = 32
 
 # Servo pulse values
 STEER_LEFT   = 1000
