@@ -1,7 +1,8 @@
 import cv2
 
 def main():
-    cap = cv2.VideoCapture(0)  # 0 = default camera
+    cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)  # 0 = default camera
+    
 
     if not cap.isOpened():
         print("Error: Could not open camera.")
@@ -11,6 +12,7 @@ def main():
 
     while True:
         ret, frame = cap.read()
+        frame = cv2.flip(frame, -1)  # -1 = flip both horizontal and vertical
         if not ret:
             print("Error: Failed to grab frame.")
             break
@@ -28,7 +30,7 @@ def main():
             print("Quitting.")
             break
         elif key == ord('s'):
-            filename = "snapshot.jpg"
+            filename = "snapshot4.jpg"
             cv2.imwrite(filename, frame)
             print(f"Snapshot saved to {filename}")
 
