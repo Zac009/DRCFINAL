@@ -15,7 +15,7 @@ def blue_det(frame_HSV):
 
 def main():
     snapshot_counter = 0  # put this before the while loop
-    cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)  # 0 = default camera
+    cap = cv2.VideoCapture(0)  # 0 = default camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 
