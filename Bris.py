@@ -162,7 +162,6 @@ class Vision:
 
                 try:
                     if green_x is not None and self.width * 0.3 < green_x < self.width * 0.6:
-                        print("Green - stopping")
                         self.drive("stop")
                         break
                     elif blue_x is not None and yellow_x is not None:
@@ -186,19 +185,16 @@ class Vision:
                             self.last_steer = STEER_LEFT
                             self.last_drive = "corner"
                     elif blue_x is not None:
-                        print("Only blue - steer left")
                         self.do_steer(STEER_LEFT)
                         self.drive("corner")
                         self.last_steer = STEER_LEFT
                         self.last_drive = "corner"
                     elif yellow_x is not None:
-                        print("Only yellow - steer right")
                         self.do_steer(STEER_RIGHT)
                         self.drive("corner")
                         self.last_steer = STEER_RIGHT
                         self.last_drive = "corner"
                     else:
-                        print("No lines - continuing last command")
                         self.do_steer(self.last_steer)
                         self.drive(self.last_drive)
 
@@ -213,7 +209,6 @@ class Vision:
             print("Error: {}".format(e))
         finally:
             self.cap.release()
-            cv2.destroyAllWindows()
             print("Done")
 
 
