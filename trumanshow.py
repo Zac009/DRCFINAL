@@ -93,6 +93,7 @@ class Vision:
                 contours_blue, _ = cv2.findContours(blue_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
                 blue_x = None
+                MIN_CONTOUR_AREA = 0
                 if contours_blue:
                     largest_blue = max(contours_blue, key=cv2.contourArea)
                     if cv2.contourArea(largest_blue) > MIN_CONTOUR_AREA:
@@ -111,6 +112,7 @@ class Vision:
                     else:
                         self.do_steer(STEER_LEFT)
                     forward()
+                    print("Forward")
                 else:
                     print("No blue")
 
@@ -127,12 +129,9 @@ class Vision:
                 servo.stop()
             except:
                 pass
-            try:
-                GPIO.cleanup()
-            except:
-                pass
-            print("Done")
             self.cap.release()
+            GPIO.cleanup()    # only once, at the very end
+            print("Done")
 
 
 
