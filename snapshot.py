@@ -8,15 +8,16 @@ import os
 snapshot_counter = 0  # put this before the while loop
 
 
-def blue_det(self):
+def blue_det(frame_HSV):
     lower_blue = np.array([90, 50, 120])
     upper_blue = np.array([150, 255, 255])
-    return cv2.inRange(self.frame_HSV, lower_blue, upper_blue)
+    return cv2.inRange(frame_HSV, lower_blue, upper_blue)
 
 
 def main():
     cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)  # 0 = default camera
-    
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 
     if not cap.isOpened():
         print("Error: Could not open camera.")
@@ -31,7 +32,6 @@ def main():
             print("Error: Failed to grab frame.")
             break
         frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
         blue_mask     = blue_det(frame_HSV)
         roi_height    = frame.shape[0] // 4
         final_mask = blue_mask[-roi_height:, :]
