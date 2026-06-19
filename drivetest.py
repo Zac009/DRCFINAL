@@ -5,10 +5,10 @@ import time
 STEER_PIN     = 32  # PWM - Steering servo
 DRIVE_PIN     = 33  # PWM - Drive speed
 
-MOTOR_RIGHT_A = 10  # Right motor direction pin 1
+MOTOR_RIGHT_A = 13  # Right motor direction pin 1
 MOTOR_RIGHT_B = 11  # Right motor direction pin 2
 MOTOR_LEFT_A  = 7   # Left motor direction pin 1
-MOTOR_LEFT_B  = 8   # Left motor direction pin 2
+MOTOR_LEFT_B  = 12   # Left motor direction pin 2
 
 # Servo pulse values
 STEER_LEFT     = 1000

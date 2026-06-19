@@ -45,6 +45,9 @@ def steer_right():
 def steer_center():
     servo.ChangeDutyCycle(7.5)
 
+def steer(pulse):
+    servo.ChangeDutyCycle(pulse)
+
 def stop():
     GPIO.output(ENA, GPIO.LOW)
     GPIO.output(IN1, GPIO.LOW)
@@ -53,47 +56,21 @@ def stop():
     GPIO.output(IN4, GPIO.LOW)
     steer_center()
 
-def get_key():
-    fd = sys.stdin.fileno()
-    old = termios.tcgetattr(fd)
-    try:
-        tty.setraw(fd)
-        key = sys.stdin.read(1)
-        # handle arrow keys (escape sequences)
-        if key == '\x1b':
-            key += sys.stdin.read(2)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old)
-    return key
-
-print("Controls: W=forward  S=backward  A=left  D=right  SPACE=stop  Q=quit")
-print("Arrow keys also work")
-
 try:
-    while True:
-        key = get_key().lower()
+    print("Forward")
+    steer_center()
+    forward()
+    time.sleep(2)
 
-        if key in ('w', '\x1b[A'):
-            print("Forward")
-            forward()
-        elif key in ('s', '\x1b[B'):
-            print("Backward")
-            backward()
-        elif key in ('a', '\x1b[D'):
-            print("Left")
-            steer_left()
-        elif key in ('d', '\x1b[C'):
-            print("Right")
-            steer_right()
-        elif key == ' ':
-            print("Stop")
-            stop()
-        elif key == 'q':
-            print("Quit")
-            break
+    print("Right")
+    steer_right()
+    time.sleep(2)
+
+    print("Stop")
+    stop()
 
 except KeyboardInterrupt:
-    print("Stopped")
+    print("Stopped by user")
 
 finally:
     try:
@@ -103,3 +80,10 @@ finally:
         pass
     GPIO.cleanup()
     print("Done")
+
+
+"""
+Notes:
+- Work out angle of the servo then createa function to work out angle
+- Variable speed
+"""
