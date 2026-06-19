@@ -21,9 +21,9 @@ servo = GPIO.PWM(SERVO_PIN, 50)
 servo.start(7.5)
 time.sleep(1)
 
-STEER_LEFT       = 5.0
+STEER_LEFT       = 8
 STEER_CENTER     = 7.5
-STEER_RIGHT      = 10.0
+STEER_RIGHT      = 7
 MIN_CONTOUR_AREA = 500
 
 def forward():
