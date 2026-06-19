@@ -15,18 +15,13 @@ IN2       = 11
 IN3       = 7
 IN4       = 13
 
-for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
-    GPIO.setup(pin, GPIO.OUT)
-
-servo = GPIO.PWM(SERVO_PIN, 50)
-servo.start(7.5)
-time.sleep(1)
-
 # Constants
-STEER_LEFT    = 5.0
-STEER_CENTER  = 7.5
-STEER_RIGHT   = 10.0
+STEER_LEFT       = 7
+STEER_CENTER     = 7.5
+STEER_RIGHT      = 8
 MIN_CONTOUR_AREA = 500
+
+servo = None
 
 def forward():
     GPIO.output(ENA, GPIO.HIGH)
@@ -65,7 +60,7 @@ def stop():
 
 class Vision:
     def __init__(self):
-        self.r_width = 500
+        self.r_width  = 500
         self.r_height = 300
         self.direction = "Blue"
 
@@ -90,7 +85,7 @@ class Vision:
         elif action == "stop":
             stop()
         elif action == "corner":
-            forward()  # same as forward, tune speed separately if needed
+            forward()
 
     def do_steer(self, pulse):
         steer(pulse)
@@ -109,7 +104,6 @@ class Vision:
             print("Can't receive initial frame. Exiting ...")
             return
 
-        self.height, self.width = self.frame.shape[:2]
         steer_center()
         self.last_steer = STEER_CENTER
         self.last_drive = "forward"
@@ -117,9 +111,14 @@ class Vision:
         try:
             while True:
                 ret, self.frame = self.cap.read()
-                if not ret:
+                if not ret:                              # check ret BEFORE flip
                     print("Can't receive frame. Exiting ...")
                     break
+
+                self.frame = cv2.flip(self.frame, -1)
+                h, w = self.frame.shape[:2]
+                self.frame = self.frame[:, w//2:]        # take right half
+                self.height, self.width = self.frame.shape[:2]  # update after crop
 
                 self.frame_HSV = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
 
@@ -204,25 +203,40 @@ class Vision:
                         self.drive(self.last_drive)
 
                 except Exception as e:
-                    print(f"Steering error: {e}")
+                    print("Steering error: {}".format(e))
                     self.drive("stop")
                     break
 
         except KeyboardInterrupt:
             print("Stopped by user")
         except Exception as e:
-            print(f"Error: {e}")
+            print("Error: {}".format(e))
         finally:
-            try:
-                stop()
-                servo.stop()
-            except:
-                pass
             self.cap.release()
             cv2.destroyAllWindows()
-            GPIO.cleanup()
             print("Done")
 
 
-Ben = Vision()
-Ben.main()
+try:
+    for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
+        GPIO.setup(pin, GPIO.OUT)
+
+    servo = GPIO.PWM(SERVO_PIN, 50)
+    servo.start(7.5)
+    time.sleep(1)
+
+    Ben = Vision()
+    Ben.main()
+
+finally:
+    try:
+        stop()
+    except:
+        pass
+    if servo is not None:
+        try:
+            servo.stop()
+        except:
+            pass
+    GPIO.cleanup()
+    print("GPIO cleaned up")
