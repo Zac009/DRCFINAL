@@ -165,7 +165,6 @@ class Vision:
                         self.drive("stop")
                         break
                     elif blue_x is not None and yellow_x is not None:
-                        print("Straight")
                         center       = (blue_x + yellow_x) // 2
                         frame_center = self.width // 2
                         offset       = center - frame_center
