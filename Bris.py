@@ -19,7 +19,7 @@ IN4       = 13
 STEER_LEFT       = 7
 STEER_CENTER     = 7.5
 STEER_RIGHT      = 8
-MIN_CONTOUR_AREA = 500
+MIN_CONTOUR_AREA = 0
 
 servo = None
 
