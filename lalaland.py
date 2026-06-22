@@ -3,6 +3,11 @@ import time
 import sys
 import tty
 import termios
+import subprocess
+
+
+subprocess.run(["sudo", "sh", "-c", "echo 0 > /sys/class/pwm/pwmchip0/export"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+subprocess.run(["sudo", "sh", "-c", "echo 20000000 > /sys/class/pwm/pwmchip0/pwm0/period"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -38,10 +43,10 @@ def backward():
     GPIO.output(IN4, GPIO.HIGH)
 
 def steer_left():
-    servo.ChangeDutyCycle(5.0)
+    servo.ChangeDutyCycle(8.0)
 
 def steer_right():
-    servo.ChangeDutyCycle(10.0)
+    servo.ChangeDutyCycle(7.0)
 
 def steer_center():
     servo.ChangeDutyCycle(7.5)
