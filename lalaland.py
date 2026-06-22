@@ -20,7 +20,8 @@ for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
 
 servo = GPIO.PWM(SERVO_PIN, 50)
 servo.start(7.5)
-time.sleep(2)
+time.sleep(1.5)
+
 
 def forward():
     GPIO.output(ENA, GPIO.HIGH)
