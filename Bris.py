@@ -173,29 +173,35 @@ class Vision:
                             self.drive("forward")
                             self.last_steer = STEER_CENTER
                             self.last_drive = "forward"
+                            time.sleep(0.1)
                         elif offset > 0:
                             self.do_steer(STEER_RIGHT)
                             self.drive("corner")
                             self.last_steer = STEER_RIGHT
                             self.last_drive = "corner"
+                            time.sleep(0.1)
                         else:
                             self.do_steer(STEER_LEFT)
                             self.drive("corner")
                             self.last_steer = STEER_LEFT
                             self.last_drive = "corner"
+                            time.sleep(0.1)
                     elif blue_x is not None:
                         self.do_steer(STEER_LEFT)
                         self.drive("corner")
                         self.last_steer = STEER_LEFT
                         self.last_drive = "corner"
+                        time.sleep(0.1)
                     elif yellow_x is not None:
                         self.do_steer(STEER_RIGHT)
                         self.drive("corner")
                         self.last_steer = STEER_RIGHT
                         self.last_drive = "corner"
+                        time.sleep(0.1)
                     else:
                         self.do_steer(self.last_steer)
                         self.drive(self.last_drive)
+                        time.sleep(0.1)
 
                 except Exception as e:
                     print("Steering error: {}".format(e))
