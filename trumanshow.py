@@ -68,7 +68,7 @@ class Vision:
         if not ret:
             print("Can't receive initial frame. Exiting ...")
             return
-
+        self.frame = cv2.flip(self.frame, -1)  # -1 = flip both horizontal and vertical
         self.height, self.width = self.frame.shape[:2]
         self.last_steer = STEER_CENTER
 
@@ -101,11 +101,11 @@ class Vision:
                     if snapshotcounter < 7:
                         filename = "snapshot{}.jpg".format(snapshotcounter)
                         cv2.imwrite(filename, blue_mask_roi)
-                        snapshot_counter += 1
+                        snapshotcounter += 1
                         filename = "snapshot{}.jpg".format(snapshotcounter)
                         cv2.imwrite(filename, self.frame)
                         print("Snapshot saved")
-                        snapshot_counter += 1
+                        snapshotcounter += 1
                     new_steer = STEER_CENTER
                     if abs(offset) < 20:
                         new_steer = STEER_CENTER
@@ -116,6 +116,7 @@ class Vision:
                     if new_steer != self.last_steer:
                         self.do_steer(new_steer)
                         self.last_steer = new_steer
+                    print("Go Forward chatters!!!!")
                     forward()
                 else:
                     stop()
@@ -144,6 +145,12 @@ try:
 
     Ben = Vision()
     Ben.main()
+except KeyboardInterrupt:
+    print("Stopped by user")
+    stop()
+    servo.stop()
+    GPIO.cleanup()
+    print("GPIO cleaned up")
 
 finally:
     try:
