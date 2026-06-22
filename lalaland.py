@@ -6,8 +6,8 @@ import termios
 import subprocess
 
 
-subprocess.run(["sudo", "sh", "-c", "echo 0 > /sys/class/pwm/pwmchip0/export"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-subprocess.run(["sudo", "sh", "-c", "echo 20000000 > /sys/class/pwm/pwmchip0/pwm0/period"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+"""subprocess.run(["sudo", "sh", "-c", "echo 0 > /sys/class/pwm/pwmchip0/export"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+subprocess.run(["sudo", "sh", "-c", "echo 20000000 > /sys/class/pwm/pwmchip0/pwm0/period"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)"""
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -15,8 +15,8 @@ GPIO.setwarnings(False)
 # Pins
 SERVO_PIN = 33
 ENA       = 32
-IN1       = 12
-IN2       = 11
+IN1       = 11
+IN2       = 12
 IN3       = 7
 IN4       = 13
 

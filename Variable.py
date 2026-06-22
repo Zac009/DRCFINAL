@@ -6,11 +6,11 @@ GPIO.setwarnings(False)
 
 # Pins
 ENA = 32
-IN1 = 12
-IN2 = 11
-IN3 = 7
-IN4 = 13
-
+ENA       = 32
+IN1       = 11
+IN2       = 12
+IN3       = 7
+IN4       = 13
 try:
     # Setup pins
     for pin in [ENA, IN1, IN2, IN3, IN4]:
