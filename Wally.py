@@ -3,6 +3,7 @@ import time
 import sys
 import numpy as np
 import cv2
+from Artemis import Arrow_Detection
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -19,7 +20,7 @@ IN4       = 13
 STEER_LEFT       = 7.3
 STEER_CENTER     = 7.5
 STEER_RIGHT      = 7.7
-MIN_CONTOUR_AREA = 0
+MIN_CONTOUR_AREA = 100
 
 servo = None
 
@@ -62,6 +63,7 @@ class Vision:
         self.r_width  = 500
         self.r_height = 300
         self.direction = "Blue"
+        self.arrow = Arrow_Detection()
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.r_width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.r_height)
@@ -95,20 +97,42 @@ class Vision:
         lower_purple = np.array([120, 70, 70])
         upper_purple = np.array([160, 255, 255])
         return cv2.inRange(self.frame_HSV, lower_purple, upper_purple)
-
-    """
-    def drive(self, action):
-        pass
     
-    def do_steer(self, pulse:
-        pass)"""
+    def black_det(self):
+        lower_black = np.array([0, 0, 0])
+        upper_black = np.array([180, 255, 50])
+        return cv2.inRange(self.frame_HSV, lower_black, upper_black)
+    
+    def arrow_det(self):
+        direction = self.arrow.runner(self.black_mask_roi)
+        if direction is False:
+            steer_right()
+            self.last_steer = STEER_RIGHT
+            forward()
+            time.sleep(1)
+        elif direction is True:
+            steer_left()
+            self.last_steer = STEER_LEFT
+            forward()
+            time.sleep(0.1)
+    
+    def invert(self):
+        if self.last_steer == STEER_LEFT:
+            steer_right()
+            self.last_steer = STEER_RIGHT
+        elif self.last_steer == STEER_RIGHT:
+            steer_left()
+            self.last_steer = STEER_LEFT
+        if self.last_drive != "forward":
+            forward()
+        time.sleep(0.1)
     
     def main(self):
         try:
             steer_center()
             self.last_steer = STEER_CENTER
-            forward()
             self.last_drive = "forward"
+            forward()
             while True:
                 ret, self.frame = self.cap.read()
                 if not ret:
@@ -117,14 +141,14 @@ class Vision:
                 self.frame = cv2.flip(self.frame, -1)  # -1 = flip both horizontal and vertical
                 self.height, self.width = self.frame.shape[:2]
                 self.frame = self.frame[:, self.width//2:]        # take right half
+                self.height, self.width = self.frame.shape[:2]
                 self.frame_HSV = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
                 
                 blue_mask   = self.blue_det()
                 yellow_mask = self.yellow_det()
                 green_mask  = self.green_det()
                 purple_mask = self.purple_det()
-
-                roi_height = self.height // 4
+                black_mask = self.black_det()
                 start_row = self.height // 3
                 end_row = 2 * self.height // 3
 
@@ -132,16 +156,19 @@ class Vision:
                 yellow_mask_roi = yellow_mask[start_row:end_row, :]
                 green_mask_roi = green_mask[start_row:end_row, :]
                 purple_mask_roi = purple_mask[start_row:end_row, :]
+                self.black_mask_roi = black_mask[start_row:end_row, :]
 
                 contours_blue, _ = cv2.findContours(blue_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 contours_yellow, _ = cv2.findContours(yellow_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 contours_green, _ = cv2.findContours(green_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 contours_purple, _ = cv2.findContours(purple_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                contours_black, _ = cv2.findContours(self.black_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
                 blue_x = None
                 yellow_x = None
                 green_x = None
                 purple_x = None 
+                black_x = None
 
                 if contours_blue:
                     largest_blue = max(contours_blue, key=cv2.contourArea)
@@ -171,13 +198,48 @@ class Vision:
                         if M["m00"] != 0:
                             purple_x = int(M["m10"] / M["m00"])
 
+                if contours_black:
+                    largest_black = max(contours_black, key=cv2.contourArea)
+                    if cv2.contourArea(largest_black) > MIN_CONTOUR_AREA:
+                        M = cv2.moments(largest_black)
+                        if M["m00"] != 0:
+                            black_x = int(M["m10"] / M["m00"])
+
                 try:
-                    pass
+                    if green_x is not None and self.width * 0.3 < green_x < self.width * 0.6:
+                        stop()
+                        print("Stop line detected!!!")
+                        break
+                    elif black_x is not None:
+                        self.arrow_det()
+                    elif purple_x is not None:
+                        self.invert()
+                    elif blue_x is not None and yellow_x is not None:
+                        steer_center()
+                    elif blue_x is not None:
+                        if self.last_steer != STEER_LEFT:    
+                            steer(STEER_LEFT)
+                        if self.last_drive != "forward":
+                            forward()
+                        self.last_steer = STEER_LEFT
+                        self.last_drive = "forward"
+                        time.sleep(0.1)
+                    elif yellow_x is not None:
+                        if self.last_steer != STEER_RIGHT:
+                            steer(STEER_RIGHT)
+                        if self.last_drive != "forward":
+                            forward()
+                        self.last_steer = STEER_RIGHT
+                        self.last_drive = "forward"
+                        time.sleep(0.1)
+                    else:
+                        time.sleep(0.1)
+                        
                 except Exception as e:
                     print("Error within the main loop: {}".format(e))
                     stop()
                     servo.stop()
-                # Here you would add your logic to analyze the masks and decide how to steer and drive
+                    break
         except KeyboardInterrupt:
             print("Stopped by user")
             stop()
@@ -189,4 +251,33 @@ class Vision:
         finally:
             self.cap.release()
             print("Done")
+
+
+try:
+    for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
+        GPIO.setup(pin, GPIO.OUT)
+
+    servo = GPIO.PWM(SERVO_PIN, 50)
+    servo.start(7.5)
+    time.sleep(1)
+
+    Fred = Vision()
+    print("The Mystery Machine is ready- Fred Jones \n")
+    while True:
+        if input() == 'x':
+            Fred.main()
+            break
+
+finally:
+    try:
+        stop()
+    except:
+        pass
+    if servo is not None:
+        try:
+            servo.stop()
+        except:
+            pass
+    GPIO.cleanup()
+    print("GPIO cleaned up")
     
