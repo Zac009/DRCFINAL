@@ -70,6 +70,8 @@ class Vision:
             return
         self.frame = cv2.flip(self.frame, -1)  # -1 = flip both horizontal and vertical
         self.height, self.width = self.frame.shape[:2]
+        h, w = self.frame.shape[:2]
+        self.frame = self.frame[:, w//2:]        # take right half
         self.last_steer = STEER_CENTER
 
         try:

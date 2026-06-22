@@ -31,6 +31,8 @@ def main():
         if not ret:
             print("Error: Failed to grab frame.")
             break
+        h, w = frame.shape[:2]
+        frame = frame[:, w//2:]  
         frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         blue_mask     = blue_det(frame_HSV)
         roi_height    = frame.shape[0] // 4
