@@ -137,7 +137,10 @@ try:
 
     servo = GPIO.PWM(SERVO_PIN, 50)
     servo.start(7.2)
+    print("Servo initialized...")
     time.sleep(1)
+
+    print("Vision Testing...")
 
     Ben = Vision()
     Ben.main()
