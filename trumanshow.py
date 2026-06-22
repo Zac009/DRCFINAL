@@ -29,7 +29,7 @@ try:
     STEER_LEFT       = 8
     STEER_CENTER     = 7.5
     STEER_RIGHT      = 7
-    MIN_CONTOUR_AREA = 0
+    MIN_CONTOUR_AREA = 500
 
     def forward():
         GPIO.output(ENA, GPIO.HIGH)
@@ -80,7 +80,6 @@ try:
                 return
 
             self.height, self.width = self.frame.shape[:2]
-            steer_center()
             self.last_steer = STEER_CENTER
 
             try:
@@ -151,5 +150,6 @@ finally:
         servo.stop()
     except:
         pass
+    stop()
     GPIO.cleanup()    # only once, at the very end
     print("Done")
