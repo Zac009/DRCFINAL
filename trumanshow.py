@@ -120,6 +120,7 @@ class Vision:
                         self.last_steer = new_steer
                     print("Go Forward chatters!!!!")
                     forward()
+                    time.sleep(0.02)
                 else:
                     stop()
                     print("No blue")
