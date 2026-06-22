@@ -24,7 +24,6 @@ try:
         GPIO.setup(pin, GPIO.OUT)
 
     servo = GPIO.PWM(SERVO_PIN, 50)
-    servo.start(7.5)
     time.sleep(2)
 
     STEER_LEFT       = 8
