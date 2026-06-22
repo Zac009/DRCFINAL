@@ -103,6 +103,8 @@ class Vision:
         if not ret:
             print("Can't receive initial frame. Exiting ...")
             return
+        else:
+            print("Camera opened successfully")
 
         steer_center()
         self.last_steer = STEER_CENTER
