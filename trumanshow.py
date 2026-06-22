@@ -54,6 +54,7 @@ class Vision:
         steer(pulse)
 
     def main(self):
+        print("Opening camera...")
         snapshotcounter = 0
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
@@ -98,10 +99,10 @@ class Vision:
                     offset       = blue_x - frame_center
                     print("Blue at x={} offset={}".format(blue_x, offset))
                     if snapshotcounter < 7:
-                        filename = "snapshot{}.jpg".format(snapshot_counter)
+                        filename = "snapshot{}.jpg".format(snapshotcounter)
                         cv2.imwrite(filename, blue_mask_roi)
                         snapshot_counter += 1
-                        filename = "snapshot{}.jpg".format(snapshot_counter)
+                        filename = "snapshot{}.jpg".format(snapshotcounter)
                         cv2.imwrite(filename, self.frame)
                         print("Snapshot saved")
                         snapshot_counter += 1
