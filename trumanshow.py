@@ -120,7 +120,7 @@ class Vision:
                         self.last_steer = new_steer
                     print("Go Forward chatters!!!!")
                     forward()
-                    time.sleep(0.02)
+                    time.sleep(0.1)
                 else:
                     stop()
                     print("No blue")
@@ -140,7 +140,7 @@ try:
         GPIO.setup(pin, GPIO.OUT)
 
     servo = GPIO.PWM(SERVO_PIN, 50)
-    servo.start(7)
+    servo.start(7.5)
     print("Servo initialized...")
     time.sleep(1)
 
