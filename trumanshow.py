@@ -14,18 +14,20 @@ IN2       = 11
 IN3       = 7
 IN4       = 13
 
+Moving = False
+
 try:
     for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
         GPIO.setup(pin, GPIO.OUT)
 
     servo = GPIO.PWM(SERVO_PIN, 50)
     servo.start(7.5)
-    time.sleep(1)
+    time.sleep(2)
 
     STEER_LEFT       = 8
     STEER_CENTER     = 7.5
     STEER_RIGHT      = 7
-    MIN_CONTOUR_AREA = 500
+    MIN_CONTOUR_AREA = 0
 
     def forward():
         GPIO.output(ENA, GPIO.HIGH)
@@ -83,6 +85,7 @@ try:
                 while True:
                     ret, self.frame = self.cap.read()
                     if not ret:
+                        self.cap.release()
                         break
 
                     self.frame_HSV = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
@@ -94,7 +97,6 @@ try:
                     contours_blue, _ = cv2.findContours(blue_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
                     blue_x = None
-                    MIN_CONTOUR_AREA = 0
                     if contours_blue:
                         largest_blue = max(contours_blue, key=cv2.contourArea)
                         if cv2.contourArea(largest_blue) > MIN_CONTOUR_AREA:
@@ -106,16 +108,23 @@ try:
                         frame_center = self.width // 2
                         offset       = blue_x - frame_center
                         print(f"Blue at x={blue_x} offset={offset}")
+                        """new_steer = STEER_CENTER
                         if abs(offset) < 20:
-                            self.do_steer(STEER_CENTER)
+                            new_steer = STEER_CENTER
                         elif offset > 0:
-                            self.do_steer(STEER_RIGHT)
+                            new_steer = STEER_RIGHT
                         else:
-                            self.do_steer(STEER_LEFT)
-                        forward()
+                            new_steer = STEER_LEFT
+                        if new_steer != self.last_steer:
+                            self.do_steer(new_steer)
+                            self.last_steer = new_steer"""
+                        if moving == False:
+                            forward()
+                            moving = True
                         print("Forward")
                     else:
                         print("No blue")
+                        stop()
 
             except KeyboardInterrupt:
                 print("Stopped by user")
@@ -124,6 +133,7 @@ try:
             finally:
                     self.cap.release()
                     print("Done")
+                    stop()
 
 
 
