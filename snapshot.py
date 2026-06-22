@@ -14,7 +14,7 @@ def blue_det(frame_HSV):
 
 
 def main():
-    snapshot_counter = 0  # put this before the while loop
+    snapshot_counter = 10  # put this before the while loop
     cap = cv2.VideoCapture(0)  # 0 = default camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
@@ -46,7 +46,7 @@ def main():
                 filename = "snapshot{}.jpg".format(snapshot_counter)
                 cv2.imwrite(filename, frame)
                 print("Snapshot saved to {}".format(filename))
-                snapshot_counter += 2
+                snapshot_counter += 1
     cap.release()
 
 if __name__ == "__main__":

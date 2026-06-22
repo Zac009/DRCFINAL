@@ -204,6 +204,10 @@ class Vision:
 
         except KeyboardInterrupt:
             print("Stopped by user")
+            stop()
+            servo.stop()
+            GPIO.cleanup()
+            print("GPIO cleaned up")
         except Exception as e:
             print("Error: {}".format(e))
         finally:
