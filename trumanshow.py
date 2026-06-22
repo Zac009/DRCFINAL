@@ -17,6 +17,7 @@ IN4       = 13
 
 
 moving = False
+print("Moving:", moving)
 
 try:
     for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
@@ -120,10 +121,11 @@ try:
                         if new_steer != self.last_steer:
                             self.do_steer(new_steer)
                             self.last_steer = new_steer"""
-                        if moving == False:
+                        """if moving == False:
                             forward()
-                            moving = True
+                            moving = True"""
                         print("Forward")
+                        forward()
                     else:
                         print("No blue")
                         stop()
