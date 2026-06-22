@@ -8,11 +8,13 @@ GPIO.setwarnings(False)
 
 # Pins
 SERVO_PIN = 33
+ENA = 32
 ENA       = 32
-IN1       = 12
-IN2       = 11
+IN1       = 11
+IN2       = 12
 IN3       = 7
 IN4       = 13
+
 
 Moving = False
 
