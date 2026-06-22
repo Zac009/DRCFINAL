@@ -16,7 +16,7 @@ IN3       = 7
 IN4       = 13
 
 
-Moving = False
+moving = False
 
 try:
     for pin in [SERVO_PIN, ENA, IN1, IN2, IN3, IN4]:
