@@ -16,9 +16,9 @@ IN3       = 7
 IN4       = 13
 
 # Constants
-STEER_LEFT       = 7
+STEER_LEFT       = 7.3
 STEER_CENTER     = 7.5
-STEER_RIGHT      = 8
+STEER_RIGHT      = 7.7
 MIN_CONTOUR_AREA = 0
 
 servo = None
