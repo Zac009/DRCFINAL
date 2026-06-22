@@ -140,7 +140,7 @@ try:
         GPIO.setup(pin, GPIO.OUT)
 
     servo = GPIO.PWM(SERVO_PIN, 50)
-    servo.start(7.2)
+    servo.start(7)
     print("Servo initialized...")
     time.sleep(1)
 
