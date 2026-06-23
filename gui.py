@@ -5,10 +5,10 @@ class HSVAdjuster:
     def __init__(self):
         self.window_name = "HSV Threshold Adjuster"
         self.color_presets = {
-            'b': ('Blue', np.array([100, 50, 120]), np.array([150, 255, 255])),
-            'y': ('Yellow', np.array([30, 50, 100]), np.array([50, 255, 255])),
+            'b': ('Blue', np.array([90, 50, 120]), np.array([150, 255, 255])),
+            'y': ('Yellow', np.array([22, 50, 100]), np.array([50, 255, 255])),
             'g': ('Green', np.array([35, 100, 100]), np.array([85, 255, 255])),
-            'p': ('Purple', np.array([120, 70, 70]), np.array([160, 255, 255]))
+            'p': ('Purple', np.array([120, 70, 70]), np.array([177, 255, 255]))
         }
         self.lower = self.color_presets['b'][1].copy()
         self.upper = self.color_presets['b'][2].copy()
@@ -44,12 +44,17 @@ class HSVAdjuster:
         return np.array([lh, ls, lv]), np.array([uh, us, uv])
 
     def run(self):
-        frame = cv2.imread("snapshot.jpg")
-        frame = frame[:, frame.shape[1]//2:]  # right half only
+        cap = cv2.VideoCapture(0)
         print("Press 'b' (Blue), 'y' (Yellow), 'g' (Green), 'p' (Purple) to switch colors.")
         print("Press 'q' to quit.")
 
         while True:
+            ret, frame = cap.read()
+            if not ret:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # loop back to start
+                continue
+
+            frame = frame[:, frame.shape[1]//2:]  # right half only
             frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             self.lower, self.upper = self.get_thresholds()
 

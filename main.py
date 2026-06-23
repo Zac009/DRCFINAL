@@ -3,7 +3,7 @@ import time
 import sys
 import numpy as np
 import cv2
-from Artemis import Arrow_Detection
+from Arrow import Arrow_Detection
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -240,12 +240,6 @@ class Vision:
                     stop()
                     servo.stop()
                     break
-        except KeyboardInterrupt:
-            print("Stopped by user")
-            stop()
-            servo.stop()
-            GPIO.cleanup()
-            print("GPIO cleaned up")
         except Exception as e:
             print("Error: {}".format(e))
         finally:
@@ -262,11 +256,15 @@ try:
     time.sleep(1)
 
     Fred = Vision()
-    print("The Mystery Machine is ready- Fred Jones \n")
+    print("The Mystery Machine is ready\n")
     while True:
-        if input() == 'x':
-            Fred.main()
-            break
+        try:
+            if input() == 'x':
+                Fred.main()
+        except KeyboardInterrupt:
+            print("Returning to standby...")
+            stop()
+            continue
 
 finally:
     try:
