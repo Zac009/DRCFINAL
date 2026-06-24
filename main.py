@@ -84,7 +84,7 @@ class Vision:
         return cv2.inRange(self.frame_HSV, lower_blue, upper_blue)
 
     def yellow_det(self):
-        lower_yellow = np.array([15, 50, 100])
+        lower_yellow = np.array([22, 50, 100])
         upper_yellow = np.array([50, 255, 255])
         return cv2.inRange(self.frame_HSV, lower_yellow, upper_yellow)
 
@@ -95,7 +95,7 @@ class Vision:
     
     def purple_det(self):
         lower_purple = np.array([120, 70, 70])
-        upper_purple = np.array([160, 255, 255])
+        upper_purple = np.array([177, 255, 255])
         return cv2.inRange(self.frame_HSV, lower_purple, upper_purple)
     
     def black_det(self):
