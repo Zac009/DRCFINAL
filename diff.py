@@ -53,13 +53,12 @@ def forward(speed=80):
     #set_right(speed)
 
 def backward(speed=80):
-    set_left(-speed)
-    #set_right(-speed)
+    #set_left(speed)
+    set_right(speed)
 
 def curve_left(speed=80, factor=0.4):
-    """Gentle left curve: slow left, full right"""
-    set_left(int(speed * factor))
-    #set_right(speed)
+    set_left(speed)
+    set_right(speed)
 
 def curve_right(speed=100, factor=0.4):
     """Gentle right curve: full left, slow right"""
@@ -76,8 +75,12 @@ try:
     forward()
     time.sleep(1)
 
-    print("Curve right")
-    curve_right()
+    print("Forward")
+    backward()
+    time.sleep(1)
+
+    print("Curve left")
+    curve_left()
     time.sleep(1)
 
     print("Stop")
