@@ -66,11 +66,11 @@ try:
     print("Forward")
     steer_center()
     forward()
-    time.sleep(2)
+    time.sleep(1)
 
     print("Right")
     steer_right()
-    time.sleep(2)
+    time.sleep(1)
 
     print("Stop")
     stop()
