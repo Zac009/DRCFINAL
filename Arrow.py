@@ -58,17 +58,17 @@ class Arrow_Detection():
             print("Right")
             return False
         
-"""def black_det(self):
+def black_det(frame):
         lower_black = np.array([0, 0, 0])
         upper_black = np.array([180, 255, 50])
-        return cv2.inRange(self.frame_HSV, lower_black, upper_black)
+        return cv2.inRange(frame, lower_black, upper_black)
 
 # Load the image
 cap = cv.VideoCapture(0)
 arrow = Arrow_Detection()
 
 while True:
-    ret, img = cap.read()
+    ret, frame = cap.read()
     if not ret:
         print("Can't receive frame (stream end?). Exiting ...")
         break
@@ -76,10 +76,10 @@ while True:
     height, width = frame.shape[:2]
     frame = frame[:, width//2:]        # take right half
     height, width = frame.shape[:2]
-    black_mask = black_det()
+    black_mask = black_det(frame)
     start_row = height // 3
     end_row = 2 * height // 3
-    black_mask_roi = black_mask[start_row:end_row, :]
+    black_mask_roi = black_mask
     contours_black, _ = cv2.findContours(black_mask_roi, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     black_x = None
     MIN_CONTOUR_AREA = 500
@@ -91,6 +91,8 @@ while True:
                 black_x = int(M["m10"] / M["m00"])
     if black_x is not None:
         direction = arrow.runner(black_mask_roi)
-    print("Direction: ", direction)"""
+        print("Direction: ", direction)
+    cv2.imshow("Black Frame", black_mask_roi)
+cv2.destroyAllWindows()
 
 
