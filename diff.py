@@ -50,21 +50,21 @@ def set_right(speed):
 
 def forward(speed=80):
     set_left(speed)
-    set_right(speed)
+    #set_right(speed)
 
 def backward(speed=80):
     set_left(-speed)
-    set_right(-speed)
+    #set_right(-speed)
 
 def curve_left(speed=80, factor=0.4):
     """Gentle left curve: slow left, full right"""
     set_left(int(speed * factor))
-    set_right(speed)
+    #set_right(speed)
 
 def curve_right(speed=100, factor=0.4):
     """Gentle right curve: full left, slow right"""
     set_left(speed)
-    set_right(int(speed * factor))
+    #set_right(int(speed * factor))
 
 def stop():
     set_left(0)
